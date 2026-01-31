@@ -1,6 +1,7 @@
 def call(Map config) {
-    def image = "${config.user}/${config.image}:${config.tag}"
-    def latest = "${config.user}/${config.image}:latest"
+    def imageTag   = "${config.version}-${env.BUILD_NUMBER}"
+    def image      = "${config.user}/${config.image}:${imageTag}"
+    def latest     = "${config.user}/${config.image}:latest"
 
     sh """
         docker build --network=host -t ${image} ${config.dir}
