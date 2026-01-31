@@ -1,19 +1,21 @@
 def call(Map config) {
 
-    if (!config.user || !config.image || !config.version) {
-        error "dockerBuildPush: user, image, and version are REQUIRED"
+    if (!config.user || !config.image || !config.version || !config.dir) {
+        error "dockerBuildPush: user, image, version, dir are REQUIRED"
     }
 
     def imageTag = "${config.user}/${config.image}:${config.version}"
     def latest   = "${config.user}/${config.image}:latest"
-
-    def buildDir = config.dir?.trim() ?: '.'
+    def buildDir = config.dir.trim()
 
     echo "🐳 Building Docker image: ${imageTag}"
     echo "📁 Build context: ${buildDir}"
 
-    sh "docker build --network=host -t ${imageTag} ${buildDir}"
-    sh "docker tag ${imageTag} ${latest}"
-    sh "docker push ${imageTag}"
-    sh "docker push ${latest}"
+    sh """
+        cd ${buildDir}
+        docker build --network=host -t ${imageTag} .
+        docker tag ${imageTag} ${latest}
+        docker push ${imageTag}
+        docker push ${latest}
+    """
 }
