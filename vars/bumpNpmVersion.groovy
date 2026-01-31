@@ -1,9 +1,12 @@
 def call(Map config) {
-    def dir = config.dir
+
+    if (!config.dir) {
+        error "bumpNpmVersion: dir is REQUIRED"
+    }
 
     return sh(
         script: """
-            cd ${dir}
+            cd ${config.dir}
             npm version patch --no-git-tag-version
             node -p "require('./package.json').version"
         """,
