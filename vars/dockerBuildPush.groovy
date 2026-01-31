@@ -1,12 +1,13 @@
 def call(Map config) {
-    def imageTag   = "${config.version}-${env.BUILD_NUMBER}"
-    def image      = "${config.user}/${config.image}:${imageTag}"
-    def latest     = "${config.user}/${config.image}:latest"
+
+    def imageTag = "${config.user}/${config.image}:${config.version}"
+    def latest   = "${config.user}/${config.image}:latest"
+    def dir      = config.dir ?: '.'
 
     sh """
-        docker build --network=host -t ${image} ${config.dir}
-        docker tag ${image} ${latest}
-        docker push ${image}
+        docker build --network=host -t ${imageTag} ${dir}
+        docker tag ${imageTag} ${latest}
+        docker push ${imageTag}
         docker push ${latest}
     """
 }
