@@ -4,10 +4,8 @@ def call(Map config) {
     def latest   = "${config.user}/${config.image}:latest"
     def dir      = config.dir ?: '.'
 
-    sh """
-        docker build --network=host -t ${imageTag} ${dir}
-        docker tag ${imageTag} ${latest}
-        docker push ${imageTag}
-        docker push ${latest}
-    """
+    sh "docker build --network=host -t ${imageTag} ${dir}"
+    sh "docker tag ${imageTag} ${latest}"
+    sh "docker push ${imageTag}"
+    sh "docker push ${latest}"
 }
