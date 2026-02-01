@@ -1,5 +1,4 @@
 def call(Map config) {
-
     if (!config.user || !config.image || !config.version || !config.dir) {
         error "dockerBuildPush: user, image, version, dir are REQUIRED"
     }
@@ -12,6 +11,7 @@ def call(Map config) {
     echo "📁 Build context: ${buildDir}"
 
     sh """
+        set -e
         cd ${buildDir}
         docker build --network=host -t ${imageTag} .
         docker tag ${imageTag} ${latest}
