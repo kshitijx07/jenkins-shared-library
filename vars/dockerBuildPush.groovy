@@ -9,11 +9,12 @@ def call(Map config) {
 
     echo "🐳 Building Docker image: ${imageTag}"
     echo "📁 Build context: ${buildDir}"
+    echo "🚀 dockerBuildPush: BuildKit disabled, using absolute path"
 
     sh """
         set -e
         cd ${buildDir}
-        docker build --network=host -t ${imageTag} .
+        DOCKER_BUILDKIT=0 docker build --network=host -t ${imageTag} \$(pwd)
         docker tag ${imageTag} ${latest}
         docker push ${imageTag}
         docker push ${latest}
